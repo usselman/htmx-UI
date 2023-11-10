@@ -1,19 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>HTMX Example</title>
+    <!-- Add HTMX -->
     <script src="https://unpkg.com/htmx.org"></script>
   </head>
   <body>
-    <h1>Random Quote Generator</h1>
+    <h1>Bitcoin SV Block Information</h1>
 
-    <!-- This button uses the `hx-get` attribute to fetch content from an API -->
-    <button hx-get="https://api.quotable.io/random" hx-target="#quote">
-      Get a Random Quote
-    </button>
+    <!-- HTMX request for last 10 blocks -->
+    <div
+      hx-get="https://api.whatsonchain.com/v1/bsv/main/block/headers"
+      hx-trigger="load"
+      hx-swap="outerHTML"
+      id="latestBlocks"
+    >
+      Loading latest blocks...
+    </div>
 
-    <!-- The content fetched will be displayed here -->
-    <div id="quote"></div>
+    <script>
+      // Listen for HTMX afterOnLoad event
+      document.body.addEventListener("htmx:afterOnLoad", function (evt) {
+        if (evt.detail.elt.id === "latestBlocks") {
+          var blocksData = JSON.parse(evt.detail.xhr.responseText);
+          var latestBlockHash = blocksData[0].hash;
+
+          // Request for detailed information of the latest block
+          htmx.ajax(
+            "GET",
+            `https://api.whatsonchain.com/v1/bsv/main/block/hash/${latestBlockHash}`,
+            "#latestBlockInfo"
+          );
+        }
+      });
+    </script>
+
+    <!-- Container for the latest block information -->
+    <div id="latestBlockInfo">
+      Latest block information will be displayed here.
+    </div>
   </body>
 </html>
