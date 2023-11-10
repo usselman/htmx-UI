@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTMX Example</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+  </head>
+  <body>
+    <h1>Random Quote Generator</h1>
+
+    <!-- This button uses the `hx-get` attribute to fetch content from an API -->
+    <button hx-get="https://api.quotable.io/random" hx-target="#quote">
+      Get a Random Quote
+    </button>
+
+    <!-- The content fetched will be displayed here -->
+    <div id="quote"></div>
+  </body>
+</html>
